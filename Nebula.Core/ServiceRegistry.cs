@@ -8,30 +8,48 @@ using SimpleInjector;
 
 namespace Nebula.Core
 {
-    public static class ServiceRegistry
+    public class ServiceRegistry
     {
-        public static void Register<IInterface, CImplementation>()
+        private static ServiceRegistry instance;
+
+        private ServiceRegistry()
+        {
+            _container = new Container();
+        }
+
+        public static ServiceRegistry Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new ServiceRegistry();
+                }
+                return instance;
+            }
+        }
+
+        public void Register<IInterface, CImplementation>()
             where IInterface : class
             where CImplementation : class, IInterface
         {
-            try
+            var registrations = _container.GetCurrentRegistrations();
+
+            bool hasReg = registrations.Any(x => x.ServiceType == typeof(IInterface));
+
+            if (!hasReg)
             {
                 _container.Register<IInterface, CImplementation>(Lifestyle.Transient);
                 _container.Verify();
             }
-            catch(Exception e)
-            {
-
-            }
         }
 
-        public static IInterface GetInstance<IInterface>()
+        public IInterface GetInstance<IInterface>()
             where IInterface : class
         {
-            
             return _container.GetInstance<IInterface>();
         }
 
-        private static Container _container = new Container();
+        private Container _container;
     }
 }

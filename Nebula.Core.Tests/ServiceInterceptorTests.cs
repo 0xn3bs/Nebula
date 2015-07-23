@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Nebula.Core.Tests.TestConstructs;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void TestInterception()
             {
-                ServiceRegistry.Register<IBogusServiceInterface, BogusService>();
+                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
 
                 var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>();
 

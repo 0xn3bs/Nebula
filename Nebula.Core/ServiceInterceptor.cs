@@ -10,15 +10,18 @@ namespace Nebula.Core
 {
     public class ServiceInterceptor : IInterceptor
     {
+        bool _serviceLocal = true;
+
         public void Intercept(IInvocation invocation)
         {
-            Debug.WriteLine(">> intercepted in <<");
+            if (_serviceLocal)
+            {
+                invocation.Proceed();
+            }
+            else
+            {
 
-            invocation.Proceed();
-
-            invocation.ReturnValue = "BogusAltered!";
-
-            Debug.WriteLine(">> intercepted out <<");
+            }
         }
     }
 }

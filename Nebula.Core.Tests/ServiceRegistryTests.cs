@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Nebula.Core.Tests.TestConstructs;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,19 +10,6 @@ using System.Threading.Tasks;
 
 namespace Nebula.Core.Tests
 {
-    public interface IBogusServiceInterface
-    {
-        string ReturnBogusString();
-    }
-
-    public class BogusService : IBogusServiceInterface
-    {
-        public string ReturnBogusString()
-        {
-            return "Bogus!";
-        }
-    }
-
     public class ServiceRegistryTests
     {
         [TestFixture]
@@ -30,7 +18,7 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void RegisterValidService()
             {
-                ServiceRegistry.Register<IBogusServiceInterface, BogusService>();
+                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
 
                 Assert.Pass();
             }
@@ -42,9 +30,9 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void GetValidService()
             {
-                ServiceRegistry.Register<IBogusServiceInterface, BogusService>();
+                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
 
-                var service = ServiceRegistry.GetInstance<IBogusServiceInterface>();
+                var service = ServiceRegistry.Instance.GetInstance<IBogusServiceInterface>();
 
                 Assert.IsNotNull(service);
             }
@@ -52,9 +40,9 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void CallValidServiceMethod()
             {
-                ServiceRegistry.Register<IBogusServiceInterface, BogusService>();
+                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
 
-                var service = ServiceRegistry.GetInstance<IBogusServiceInterface>();
+                var service = ServiceRegistry.Instance.GetInstance<IBogusServiceInterface>();
 
                 var expectedString = "Bogus!";
 

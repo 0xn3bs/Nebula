@@ -67,8 +67,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceInterceptor.cs" />
-    <Compile Include="ServiceRegistry.cs" />
+    <Compile Include="ServiceInterceptorTests.cs" />
+    <Compile Include="ServiceRegistryTests.cs" />
+    <Compile Include="SetUpUnitTests.cs" />
+    <Compile Include="TestConstructs\BogusService.cs" />
+    <Compile Include="TestConstructs\IBogusInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
