@@ -22,7 +22,7 @@ namespace Nebula.Core.Tests
 
                 var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>();
 
-                var expected = "BogusAltered!";
+                var expected = "Bogus!";
 
                 var result = service.ReturnBogusString();
 
