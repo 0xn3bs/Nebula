@@ -15,7 +15,7 @@ namespace Nebula.Core
             var service = ServiceRegistry.Instance.GetInstance<IServiceInterface>();
 
             ProxyGenerator _generator = new ProxyGenerator(new PersistentProxyBuilder());
-            ServiceInterceptor _serviceInterceptor = new ServiceInterceptor();
+            ServiceCallInterceptor _serviceInterceptor = new ServiceCallInterceptor();
             var proxy = _generator.CreateInterfaceProxyWithTarget(service, _serviceInterceptor);
 
             return proxy;
