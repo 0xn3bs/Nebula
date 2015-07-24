@@ -2,7 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -19,13 +22,19 @@ namespace Nebula.Core
         private ISession _session;
 
         [DataMember]
-        private string _typeString;
+        private string _typeFullName;
         [DataMember]
-        MethodInfo _method;
+        private string _methodName;
+
         [DataMember]
-        object[] _arguments;
+        private object[] _arguments;
         [DataMember]
-        Type[] _genericArguments;
+        private Type[] _genericArguments;
+
+        public RemoteProcedureCall()
+        {
+
+        }
 
         public RemoteProcedureCall(ISession session, IInvocation invocation)
         {
@@ -35,15 +44,46 @@ namespace Nebula.Core
             _id = Guid.NewGuid();
             _session = session;
 
-            _typeString = invocation.Method.DeclaringType.AssemblyQualifiedName;
-            _method = invocation.Method;
+            _typeFullName = invocation.InvocationTarget.GetType().AssemblyQualifiedName;
+            _methodName = invocation.Method.Name;
             _arguments = invocation.Arguments;
             _genericArguments = invocation.GenericArguments;
         }
 
-        public void Execute()
+        public async Task<object> Execute()
         {
             var serialized = Serialize();
+
+            var appServicePrefix = ConfigurationManager.AppSettings.GetValues("ApplicationServicePrefix").FirstOrDefault();
+
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(serialized);
+
+                var response = await client.PostAsync(appServicePrefix, content);
+
+                var responseBytes = await response.Content.ReadAsByteArrayAsync();
+
+                var responseString = System.Text.Encoding.UTF8.GetString(responseBytes);
+
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.TypeNameHandling = TypeNameHandling.All;
+                settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
+                var deserialized = JsonConvert.DeserializeObject(responseString, settings);
+
+                return deserialized;
+            }
+        }
+
+        public object Result()
+        {
+            var type = Type.GetType(_typeFullName);
+
+            var instance = Activator.CreateInstance(type);
+
+            var result = type.InvokeMember(_methodName, BindingFlags.InvokeMethod, null, instance, _arguments);
+
+            return result;
         }
 
         public string Serialize()
@@ -53,6 +93,15 @@ namespace Nebula.Core
             settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
             var serializedJson = JsonConvert.SerializeObject(this, settings);
             return serializedJson;
+        }
+
+        public static RemoteProcedureCall Deserialize(string rpcJson)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.TypeNameHandling = TypeNameHandling.All;
+            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
+            var deserialized = JsonConvert.DeserializeObject<RemoteProcedureCall>(rpcJson, settings);
+            return deserialized;
         }
     }
 }

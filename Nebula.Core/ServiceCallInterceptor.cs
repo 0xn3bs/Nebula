@@ -41,13 +41,10 @@ namespace Nebula.Core
                 }
 
                 var rpc = new RemoteProcedureCall(_session, invocation);
-                rpc.Execute();
+                var ex = rpc.Execute();
+                ex.Wait();
 
-                //  TODO
-                //  Add Objects to RPC
-                //  Serialize RPC to JSON
-                //  Execute RPC
-
+                invocation.ReturnValue = ex.Result;
             }
         }
     }

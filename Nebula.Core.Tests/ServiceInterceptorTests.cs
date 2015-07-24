@@ -31,7 +31,7 @@ namespace Nebula.Core.Tests
 
                 var expected = "Bogus!";
 
-                var result = service.ReturnBogusString();
+                var result = service.ReturnBogusString();   //  RPC
 
                 Assert.True(result == expected);
             }
