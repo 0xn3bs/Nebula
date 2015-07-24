@@ -34,6 +34,10 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SimpleInjector, Version=2.8.3.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.2.8.3\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
@@ -41,6 +45,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,10 +54,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISession.cs" />
+    <Compile Include="ITrackable.cs" />
+    <Compile Include="IWorkingSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteProcedureCall.cs" />
     <Compile Include="ServiceCallInterceptor.cs" />
     <Compile Include="ServiceProxyGenerator.cs" />
     <Compile Include="ServiceRegistry.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="TrackableObject.cs" />
+    <Compile Include="WorkingSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

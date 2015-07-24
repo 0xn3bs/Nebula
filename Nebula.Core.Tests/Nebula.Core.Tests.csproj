@@ -58,6 +58,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,12 +72,15 @@
     <Compile Include="ServiceRegistryTests.cs" />
     <Compile Include="SetUpUnitTests.cs" />
     <Compile Include="TestConstructs\BogusService.cs" />
+    <Compile Include="TestConstructs\BogusTrackable.cs" />
     <Compile Include="TestConstructs\IBogusInterface.cs" />
+    <Compile Include="WorkingSetTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

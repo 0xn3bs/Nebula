@@ -9,13 +9,13 @@ namespace Nebula.Core
 {
     public class ServiceProxyGenerator
     {
-        public static IServiceInterface GetService<IServiceInterface>()
+        public static IServiceInterface GetService<IServiceInterface>(ISession session = null)
             where IServiceInterface : class
         {
             var service = ServiceRegistry.Instance.GetInstance<IServiceInterface>();
 
             ProxyGenerator _generator = new ProxyGenerator(new PersistentProxyBuilder());
-            ServiceCallInterceptor _serviceInterceptor = new ServiceCallInterceptor();
+            ServiceCallInterceptor _serviceInterceptor = new ServiceCallInterceptor(session);
             var proxy = _generator.CreateInterfaceProxyWithTarget(service, _serviceInterceptor);
 
             return proxy;

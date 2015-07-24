@@ -20,7 +20,14 @@ namespace Nebula.Core.Tests
             {
                 ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
 
-                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>();
+                var session = new Session();
+
+                var bogusTrackable = new BogusTrackable();
+                bogusTrackable.Test = "Test!";
+
+                session.WorkingSet.Add(bogusTrackable);
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
 
                 var expected = "Bogus!";
 
