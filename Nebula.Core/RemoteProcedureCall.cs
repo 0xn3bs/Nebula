@@ -82,9 +82,19 @@ namespace Nebula.Core
 
             var instance = Activator.CreateInstance(type);
 
-            var result = type.InvokeMember(_methodName, BindingFlags.InvokeMethod, null, instance, _arguments);
+            MethodInfo method = type.GetMethod(_methodName);
 
-            return result;
+            if (_genericArguments != null && _genericArguments.Count() > 0)
+            {
+                var generic = method.MakeGenericMethod(_genericArguments);
+                var result = generic.Invoke(instance, _arguments);
+                return result;
+            }
+            else
+            {
+                var result = type.InvokeMember(_methodName, BindingFlags.InvokeMethod, null, instance, _arguments);
+                return result;
+            }
         }
 
         public string Serialize()

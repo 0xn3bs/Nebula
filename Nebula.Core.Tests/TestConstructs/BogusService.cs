@@ -12,5 +12,10 @@ namespace Nebula.Core.Tests.TestConstructs
         {
             return "Bogus!";
         }
+
+        public GenericType ReturnBogusGenericObject<GenericType>(GenericType input)
+        {
+            return input;
+        }
     }
 }

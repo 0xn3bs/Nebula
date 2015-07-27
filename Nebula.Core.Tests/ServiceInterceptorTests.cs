@@ -16,7 +16,7 @@ namespace Nebula.Core.Tests
         public class Intercept
         {
             [TestCase]
-            public void TestInterception()
+            public void TestBasicRPC()
             {
                 ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
 
@@ -34,6 +34,22 @@ namespace Nebula.Core.Tests
                 var expected = "Bogus!";
 
                 var result = service.ReturnBogusString();   //  RPC
+
+                Assert.True(result == expected);
+            }
+
+            [TestCase]
+            public void TestGenericRPC()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                long expected = 1234;
+
+                var result = service.ReturnBogusGenericObject<long>(1234);   //  RPC
 
                 Assert.True(result == expected);
             }

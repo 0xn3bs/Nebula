@@ -9,5 +9,6 @@ namespace Nebula.Core.Tests.TestConstructs
     public interface IBogusServiceInterface
     {
         string ReturnBogusString();
+        GenericType ReturnBogusGenericObject<GenericType>(GenericType input);
     }
 }

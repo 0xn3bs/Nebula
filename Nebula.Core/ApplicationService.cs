@@ -19,7 +19,6 @@ namespace Nebula.Core
             var listener = new HttpListener();
 
             listener.Prefixes.Add(appServicePrefix);
-
             listener.Start();
 
             while (true)
@@ -49,6 +48,8 @@ namespace Nebula.Core
                     Debug.WriteLine(e);
                 }
             }
+
+            listener.Stop();
         }
     }
 }
