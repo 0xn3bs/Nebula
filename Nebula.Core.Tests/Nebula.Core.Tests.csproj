@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceInterceptorTests.cs" />
+    <Compile Include="RemoteProcedureCallTests.cs" />
     <Compile Include="ServiceRegistryTests.cs" />
     <Compile Include="SetUpUnitTests.cs" />
     <Compile Include="TestConstructs\BogusService.cs" />

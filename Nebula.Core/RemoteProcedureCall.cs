@@ -27,9 +27,11 @@ namespace Nebula.Core
         private string _methodName;
 
         [DataMember]
-        private object[] _arguments;
+        private object[] _parameters;
         [DataMember]
         private Type[] _genericArguments;
+        [DataMember]
+        private Type _returnType;
 
         public RemoteProcedureCall()
         {
@@ -46,8 +48,9 @@ namespace Nebula.Core
 
             _typeFullName = invocation.InvocationTarget.GetType().FullName;
             _methodName = invocation.Method.Name;
-            _arguments = invocation.Arguments;
+            _parameters = invocation.Arguments;
             _genericArguments = invocation.GenericArguments;
+            _returnType = invocation.Method.ReturnType;
         }
 
         public async Task<object> Execute()
@@ -82,17 +85,54 @@ namespace Nebula.Core
 
             var instance = Activator.CreateInstance(type);
 
-            MethodInfo method = type.GetMethod(_methodName);
-
+            //  Does this method use generics?
             if (_genericArguments != null && _genericArguments.Count() > 0)
             {
-                var generic = method.MakeGenericMethod(_genericArguments);
-                var result = generic.Invoke(instance, _arguments);
+                var methods = type.GetMethods().Where(x => x.Name == _methodName && x.IsGenericMethod).ToList();
+                var genericMethod = methods.FirstOrDefault(x => x.GetGenericArguments().Count() == _genericArguments.Count());
+                var method = genericMethod.MakeGenericMethod(_genericArguments);
+                var result = method.Invoke(instance, _parameters);
                 return result;
             }
             else
             {
-                var result = type.InvokeMember(_methodName, BindingFlags.InvokeMethod, null, instance, _arguments);
+                var methods = type.GetMethods().Where(x => x.Name == _methodName && 
+                                                        !x.IsGenericMethod && 
+                                                        x.ReturnType == _returnType && 
+                                                        x.GetParameters().Count() == _parameters.Count()).ToList();
+
+                MethodInfo candidateMethod = methods.FirstOrDefault();
+
+                foreach(var m in methods)
+                {
+                    var innerCandidateMethod = candidateMethod;
+
+                    var pars = m.GetParameters();
+
+                    var argc = _parameters.Count();
+
+                    for(int i = 0; i < argc; ++i)
+                    {
+                        if(pars[0].GetType() != _parameters[i].GetType())
+                        {
+                            innerCandidateMethod = m;
+                        }
+                        else
+                        {
+                            innerCandidateMethod = candidateMethod;
+                            break;
+                        }
+                    }
+
+                    candidateMethod = innerCandidateMethod;
+                }
+
+                if (candidateMethod == null)
+                {
+                    throw new Exception($"Unable to find method {candidateMethod.Name} with given arguments.");
+                }
+
+                var result = candidateMethod.Invoke(instance, _parameters);
                 return result;
             }
         }
