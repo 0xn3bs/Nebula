@@ -36,20 +36,6 @@ namespace Nebula.Core.Tests
 
                 Assert.IsNotNull(service);
             }
-
-            [TestCase]
-            public void CallValidServiceMethod()
-            {
-                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
-
-                var service = ServiceFactory.Instance.GetInstance<IBogusServiceInterface>();
-
-                var expectedString = "Bogus!";
-
-                var result = service.ReturnBogusString();
-
-                Assert.True(result == expectedString);
-            }
         }
     }
 }
