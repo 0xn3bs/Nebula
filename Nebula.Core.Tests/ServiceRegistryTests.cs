@@ -18,7 +18,7 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void RegisterValidService()
             {
-                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
 
                 Assert.Pass();
             }
@@ -30,9 +30,9 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void GetValidService()
             {
-                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
 
-                var service = ServiceRegistry.Instance.GetInstance<IBogusServiceInterface>();
+                var service = ServiceFactory.Instance.GetInstance<IBogusServiceInterface>();
 
                 Assert.IsNotNull(service);
             }
@@ -40,9 +40,9 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void CallValidServiceMethod()
             {
-                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
 
-                var service = ServiceRegistry.Instance.GetInstance<IBogusServiceInterface>();
+                var service = ServiceFactory.Instance.GetInstance<IBogusServiceInterface>();
 
                 var expectedString = "Bogus!";
 

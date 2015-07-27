@@ -61,10 +61,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteProcedureCall.cs" />
     <Compile Include="ServiceCallInterceptor.cs" />
+    <Compile Include="ServiceFactory.cs" />
     <Compile Include="ServiceProxyGenerator.cs" />
-    <Compile Include="ServiceRegistry.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="TrackableObject.cs" />
+    <Compile Include="TypeRegistry.cs" />
     <Compile Include="WorkingSet.cs" />
   </ItemGroup>
   <ItemGroup>

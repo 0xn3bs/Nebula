@@ -44,7 +44,7 @@ namespace Nebula.Core
             _id = Guid.NewGuid();
             _session = session;
 
-            _typeFullName = invocation.InvocationTarget.GetType().AssemblyQualifiedName;
+            _typeFullName = invocation.InvocationTarget.GetType().FullName;
             _methodName = invocation.Method.Name;
             _arguments = invocation.Arguments;
             _genericArguments = invocation.GenericArguments;
@@ -67,8 +67,9 @@ namespace Nebula.Core
                 var responseString = System.Text.Encoding.UTF8.GetString(responseBytes);
 
                 JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.Binder = TypeRegistry.Instance;
                 settings.TypeNameHandling = TypeNameHandling.All;
-                settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
+                settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
                 var deserialized = JsonConvert.DeserializeObject(responseString, settings);
 
                 return deserialized;
@@ -77,7 +78,7 @@ namespace Nebula.Core
 
         public object Result()
         {
-            var type = Type.GetType(_typeFullName);
+            var type = TypeRegistry.Instance.GetRegisteredTypeByName(_typeFullName);
 
             var instance = Activator.CreateInstance(type);
 
@@ -90,7 +91,7 @@ namespace Nebula.Core
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.TypeNameHandling = TypeNameHandling.All;
-            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
+            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
             var serializedJson = JsonConvert.SerializeObject(this, settings);
             return serializedJson;
         }
@@ -98,8 +99,9 @@ namespace Nebula.Core
         public static RemoteProcedureCall Deserialize(string rpcJson)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.Binder = TypeRegistry.Instance;
             settings.TypeNameHandling = TypeNameHandling.All;
-            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
+            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
             var deserialized = JsonConvert.DeserializeObject<RemoteProcedureCall>(rpcJson, settings);
             return deserialized;
         }

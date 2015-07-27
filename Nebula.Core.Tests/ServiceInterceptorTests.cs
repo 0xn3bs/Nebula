@@ -18,7 +18,9 @@ namespace Nebula.Core.Tests
             [TestCase]
             public void TestInterception()
             {
-                ServiceRegistry.Instance.Register<IBogusServiceInterface, BogusService>();
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                TypeRegistry.Instance.Register(typeof(BogusTrackable));
 
                 var session = new Session();
 

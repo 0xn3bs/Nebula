@@ -35,7 +35,7 @@ namespace Nebula.Core
 
                     JsonSerializerSettings settings = new JsonSerializerSettings();
                     settings.TypeNameHandling = TypeNameHandling.All;
-                    settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
+                    settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
                     var serializedJson = JsonConvert.SerializeObject(result, settings);
 
                     byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(serializedJson);
