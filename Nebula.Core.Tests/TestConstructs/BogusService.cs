@@ -23,6 +23,11 @@ namespace Nebula.Core.Tests.TestConstructs
             return input;
         }
 
+        public GenericType ReturnBogusGenericObject<GenericType>()
+        {
+            return default(GenericType);
+        }
+
         public GenericType ReturnBogusGenericObject<GenericType>(GenericType input)
         {
             return input;

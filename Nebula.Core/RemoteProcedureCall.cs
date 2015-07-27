@@ -33,6 +33,9 @@ namespace Nebula.Core
         [DataMember]
         private Type _returnType;
 
+        [DataMember]
+        private bool _isGenericMethod;
+
         public RemoteProcedureCall()
         {
 
@@ -51,6 +54,7 @@ namespace Nebula.Core
             _parameters = invocation.Arguments;
             _genericArguments = invocation.GenericArguments;
             _returnType = invocation.Method.ReturnType;
+            _isGenericMethod = invocation.Method.IsGenericMethod;
         }
 
         public async Task<object> Execute()
@@ -79,18 +83,57 @@ namespace Nebula.Core
             }
         }
 
+        private MethodInfo GetMethodWithMatchingParameters(List<MethodInfo> methods)
+        {
+            MethodInfo candidateMethod = methods.FirstOrDefault();
+
+            foreach (var m in methods)
+            {
+                var innerCandidateMethod = candidateMethod;
+
+                var pars = m.GetParameters();
+
+                var argc = _parameters.Count();
+
+                for (int i = 0; i < argc; ++i)
+                {
+                    if (pars[0].GetType() != _parameters[i].GetType())
+                    {
+                        innerCandidateMethod = m;
+                    }
+                    else
+                    {
+                        innerCandidateMethod = candidateMethod;
+                        break;
+                    }
+                }
+
+                candidateMethod = innerCandidateMethod;
+            }
+
+            if (candidateMethod == null)
+            {
+                throw new Exception($"Unable to find method {candidateMethod.Name} with matching parameters.");
+            }
+
+            return candidateMethod;
+        }
+
         public object Result()
         {
             var type = TypeRegistry.Instance.GetRegisteredTypeByName(_typeFullName);
 
             var instance = Activator.CreateInstance(type);
 
-            //  Does this method use generics?
-            if (_genericArguments != null && _genericArguments.Count() > 0)
+            if (_isGenericMethod)
             {
-                var methods = type.GetMethods().Where(x => x.Name == _methodName && x.IsGenericMethod).ToList();
-                var genericMethod = methods.FirstOrDefault(x => x.GetGenericArguments().Count() == _genericArguments.Count());
-                var method = genericMethod.MakeGenericMethod(_genericArguments);
+                var methods = type.GetMethods().Where(x => x.Name == _methodName && x.IsGenericMethod &&
+                                                        x.GetParameters().Count() == _parameters.Count() &&
+                                                        x.GetGenericArguments().Count() == _genericArguments.Count()).ToList();
+
+                var candidateMethod = GetMethodWithMatchingParameters(methods);
+
+                var method = candidateMethod.MakeGenericMethod(_genericArguments);
                 var result = method.Invoke(instance, _parameters);
                 return result;
             }
@@ -101,36 +144,7 @@ namespace Nebula.Core
                                                         x.ReturnType == _returnType && 
                                                         x.GetParameters().Count() == _parameters.Count()).ToList();
 
-                MethodInfo candidateMethod = methods.FirstOrDefault();
-
-                foreach(var m in methods)
-                {
-                    var innerCandidateMethod = candidateMethod;
-
-                    var pars = m.GetParameters();
-
-                    var argc = _parameters.Count();
-
-                    for(int i = 0; i < argc; ++i)
-                    {
-                        if(pars[0].GetType() != _parameters[i].GetType())
-                        {
-                            innerCandidateMethod = m;
-                        }
-                        else
-                        {
-                            innerCandidateMethod = candidateMethod;
-                            break;
-                        }
-                    }
-
-                    candidateMethod = innerCandidateMethod;
-                }
-
-                if (candidateMethod == null)
-                {
-                    throw new Exception($"Unable to find method {candidateMethod.Name} with given arguments.");
-                }
+                var candidateMethod = GetMethodWithMatchingParameters(methods);
 
                 var result = candidateMethod.Invoke(instance, _parameters);
                 return result;

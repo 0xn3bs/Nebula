@@ -86,6 +86,22 @@ namespace Nebula.Core.Tests
             }
 
             [TestCase]
+            public void Generic_Service_Method_With_No_Arguments()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                long expected = 0;
+
+                var result = service.ReturnBogusGenericObject<long>();
+
+                Assert.True(result == expected);
+            }
+
+            [TestCase]
             public void Generic_Service_Method_Overload_With_Two_Generic_Type_Arguments()
             {
                 ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
