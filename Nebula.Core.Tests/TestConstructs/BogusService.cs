@@ -37,5 +37,10 @@ namespace Nebula.Core.Tests.TestConstructs
         {
             return input;
         }
+
+        public bool ReturnBogusBool(BogusTrackable a)
+        {
+            return true;
+        }
     }
 }

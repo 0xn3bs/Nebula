@@ -19,4 +19,16 @@ namespace Nebula.Core.Tests.TestConstructs
             set { _test = value; }
         }
     }
+
+    public class BogusTrackableChild : BogusTrackable
+    {
+        public string _test2;
+
+        [DataMember]
+        public string Test2
+        {
+            get { return _test; }
+            set { _test = value; }
+        }
+    }
 }

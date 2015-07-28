@@ -97,13 +97,16 @@ namespace Nebula.Core
 
                 for (int i = 0; i < argc; ++i)
                 {
-                    if (pars[0].GetType() != _parameters[i].GetType())
+                    var par = _parameters[i].GetType();
+                    var methDefPar = pars[i].ParameterType;
+
+                    if (methDefPar.IsAssignableFrom(par) || methDefPar.IsGenericParameter)
                     {
                         innerCandidateMethod = m;
                     }
                     else
                     {
-                        innerCandidateMethod = candidateMethod;
+                        innerCandidateMethod = null;
                         break;
                     }
                 }

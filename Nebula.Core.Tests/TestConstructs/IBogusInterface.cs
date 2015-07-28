@@ -15,5 +15,7 @@ namespace Nebula.Core.Tests.TestConstructs
         GenericType ReturnBogusGenericObject<GenericType>();
         GenericType ReturnBogusGenericObject<GenericType>(GenericType input);
         GenericType ReturnBogusGenericObject<GenericType, GenericType2>(GenericType input, GenericType2 input2);
+
+        bool ReturnBogusBool(BogusTrackable a);
     }
 }
