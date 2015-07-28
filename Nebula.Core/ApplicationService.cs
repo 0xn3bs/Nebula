@@ -30,7 +30,15 @@ namespace Nebula.Core
                 try
                 {
                     var rpc = RemoteProcedureCall.Deserialize(content);
-                    var result = rpc.Result();
+                    object result = rpc.Result();
+
+                    var resultType = result.GetType();
+
+                    if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                    {
+                        var taskResult = resultType.GetProperty("Result").GetValue(result);
+                        result = taskResult;
+                    }
 
                     JsonSerializerSettings settings = new JsonSerializerSettings();
                     settings.TypeNameHandling = TypeNameHandling.All;

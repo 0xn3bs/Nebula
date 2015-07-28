@@ -10,6 +10,7 @@ namespace Nebula.Core.Tests.TestConstructs
     {
         string ReturnBogusString();
         string ReturnBogusString(string input);
+        Task<string> ReturnBogusStringAsync(string input);
         string ReturnBogusString(string input, long blah);
 
         GenericType ReturnBogusGenericObject<GenericType>();

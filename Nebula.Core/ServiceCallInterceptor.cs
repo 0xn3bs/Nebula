@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Linq.Expressions;
 
 namespace Nebula.Core
 {
@@ -44,7 +45,27 @@ namespace Nebula.Core
                 var ex = rpc.Execute();
                 ex.Wait();
 
-                invocation.ReturnValue = ex.Result;
+                var resultType = invocation.Method.ReturnType;
+
+                if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                {
+                    var underlyingGenericType = resultType.GenericTypeArguments.FirstOrDefault();
+
+                    var taskResultType = typeof(Task<>).MakeGenericType(underlyingGenericType);
+
+                    var res = ex.Result;
+
+                    var task = new Task<string>(() => { return (string)res; });
+
+                    task.Start();
+                    task.Wait();
+
+                    invocation.ReturnValue = task;
+                }
+                else
+                {
+                    invocation.ReturnValue = ex.Result;
+                }
             }
         }
     }

@@ -23,6 +23,11 @@ namespace Nebula.Core.Tests.TestConstructs
             return input;
         }
 
+        public async Task<string> ReturnBogusStringAsync(string input)
+        {
+            return await Task.Run(() => { return input; });
+        }
+
         public GenericType ReturnBogusGenericObject<GenericType>()
         {
             return default(GenericType);
@@ -41,6 +46,11 @@ namespace Nebula.Core.Tests.TestConstructs
         public bool ReturnBogusBool(BogusTrackable a)
         {
             return true;
+        }
+
+        public async Task<bool> ReturnBogusBoolAsync(BogusTrackable a)
+        {
+            return await Task.Run(() => ReturnBogusBool(a));
         }
     }
 }

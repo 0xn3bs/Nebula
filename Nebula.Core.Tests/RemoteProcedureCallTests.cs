@@ -134,6 +134,22 @@ namespace Nebula.Core.Tests
 
                 Assert.True(result == expected);
             }
+
+            [TestCase]
+            public async Task Async_Service_Method_Call_Utilizing_Child_Class()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                var expected = "Bogus String3!";
+
+                var result = await service.ReturnBogusStringAsync(expected);
+
+                Assert.True(result == expected);
+            }
         }
     }
 }
