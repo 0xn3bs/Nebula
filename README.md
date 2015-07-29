@@ -2,7 +2,7 @@
 - - -
 Nebula is a simple framework for Service Oriented Architecture in .NET.
 
-This project is an excerise on implementing my own SOA from experience I've gained from writing enterprise software.
+This project is an exercise in implementing my own SOA from the experience I've gained from writing enterprise software.
 
 ## Features and Roadmap
 - [x] Remote Procedure Calls over HTTP utilizing JSON.
