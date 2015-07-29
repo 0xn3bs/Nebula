@@ -23,6 +23,9 @@ namespace Nebula.Core
 
             while (true)
             {
+                if (!listener.IsListening)
+                    break;
+
                 var context = await listener.GetContextAsync();
 
                 string content = new System.IO.StreamReader(context.Request.InputStream).ReadToEnd();
@@ -56,8 +59,6 @@ namespace Nebula.Core
                     Debug.WriteLine(e);
                 }
             }
-
-            listener.Stop();
         }
     }
 }

@@ -11,12 +11,10 @@ namespace Nebula.Core.Tests
     [SetUpFixture]
     public class SetUpUnitTests
     {
-        static ApplicationService appService;
-
         [SetUp]
         public void SetUp()
         {
-            ApplicationService appService = new ApplicationService();
+            var appService = new ApplicationService();
 
             TypeRegistry.Instance.Register(typeof(BogusTrackable));
             TypeRegistry.Instance.Register(typeof(BogusTrackableChild));
