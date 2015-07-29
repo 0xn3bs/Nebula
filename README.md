@@ -7,7 +7,7 @@ This project is an exercise in implementing my own SOA from the experience I've 
 ## Features and Roadmap
 - [x] Remote Procedure Calls over HTTP utilizing JSON.
 - [x] Change tracking.
+- [x] Support for Asynchronous Programming.
 - [ ] Data synchronization between client and services.
-- [ ] Support for Asynchronous Programming.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/s98el7ttk7isnays/branch/master?svg=true)](https://ci.appveyor.com/project/inkadnb/nebula/branch/master)
