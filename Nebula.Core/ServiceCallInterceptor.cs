@@ -43,7 +43,15 @@ namespace Nebula.Core
 
                 var rpc = new RemoteProcedureCall(_session, invocation);
                 var ex = rpc.ExecuteRemotely();
-                ex.Wait();
+
+                try
+                {
+                    ex.Wait();
+                }
+                catch(Exception e)
+                {
+                    throw e.InnerException;
+                }
 
                 var resultType = invocation.Method.ReturnType;
 

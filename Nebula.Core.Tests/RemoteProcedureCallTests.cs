@@ -164,6 +164,19 @@ namespace Nebula.Core.Tests
 
                 Assert.Pass();
             }
+
+            [TestCase]
+            [ExpectedException(ExpectedMessage = "Some Service Exception")]
+            public void Service_Method_That_Throws_Exception()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                service.ThrowAnException("Some Service Exception");
+            }
         }
     }
 }

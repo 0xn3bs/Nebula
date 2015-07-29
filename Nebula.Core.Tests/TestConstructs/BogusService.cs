@@ -57,5 +57,10 @@ namespace Nebula.Core.Tests.TestConstructs
         {
             return await Task.Run(() => ReturnBogusBool(a));
         }
+
+        public void ThrowAnException(string exceptionMessage)
+        {
+            throw new Exception(exceptionMessage);
+        }
     }
 }

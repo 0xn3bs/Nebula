@@ -32,10 +32,15 @@ namespace Nebula.Core
 
                 try
                 {
+                    object result = null;
+                    RemoteProcedureCall rpc = null;
+                    RemoteServiceResponse response = null;
+                    byte[] jsonBytes = null;
+
                     try
                     {
-                        var rpc = RemoteProcedureCall.Deserialize(content);
-                        object result = rpc.GetResult();
+                        rpc = RemoteProcedureCall.Deserialize(content);
+                        result = rpc.GetResult();
 
                         var resultType = result.GetType();
 
@@ -44,25 +49,33 @@ namespace Nebula.Core
                             var taskResult = resultType.GetProperty("Result").GetValue(result);
                             result = taskResult;
                         }
-
-                        RemoteServiceResponse response = new RemoteServiceResponse(result, null);
-
-                        byte[] jsonBytes = ObjectToJson(response);
-
-                        WriteBytesToOutputStream(context, jsonBytes);
                     }
                     catch (Exception e)
                     {
-                        RemoteServiceResponse response = new RemoteServiceResponse(null, e);
+                        response = new RemoteServiceResponse(null, e);
 
-                        byte[] jsonBytes = ObjectToJson(response);
+                        jsonBytes = ObjectToJson(response);
 
                         WriteBytesToOutputStream(context, jsonBytes);
+
+                        throw;
                     }
+
+                    response = new RemoteServiceResponse(result, null);
+
+                    jsonBytes = ObjectToJson(response);
+
+                    WriteBytesToOutputStream(context, jsonBytes);
                 }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
+
+                    using (EventLog eventLog = new EventLog("Application"))
+                    {
+                        eventLog.Source = "Application";
+                        eventLog.WriteEntry(e.ToString(), EventLogEntryType.Warning);
+                    }
                 }
             }
         }
