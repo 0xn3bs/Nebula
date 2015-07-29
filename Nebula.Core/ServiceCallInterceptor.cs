@@ -47,20 +47,23 @@ namespace Nebula.Core
 
                 var resultType = invocation.Method.ReturnType;
 
-                if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() == 1)
                 {
-                    var underlyingGenericType = resultType.GenericTypeArguments.FirstOrDefault();
+                    var underlyingType = resultType.GenericTypeArguments.FirstOrDefault();
 
-                    var taskResultType = typeof(Task<>).MakeGenericType(underlyingGenericType);
+                    var taskResultType = typeof(Task);
+                    var fromResultMethod = taskResultType.GetMethod("FromResult").MakeGenericMethod(underlyingType);
 
-                    var res = ex.Result;
+                    object[] par = { ex.Result };
 
-                    var task = new Task<string>(() => { return (string)res; });
-
-                    task.Start();
-                    task.Wait();
+                    var task = fromResultMethod.Invoke(null, par);
 
                     invocation.ReturnValue = task;
+                }
+                else
+                if(resultType == typeof(Task) && resultType.GenericTypeArguments.Count() == 0)
+                {
+                    invocation.ReturnValue = ex;
                 }
                 else
                 {

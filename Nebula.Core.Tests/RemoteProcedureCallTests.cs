@@ -150,6 +150,20 @@ namespace Nebula.Core.Tests
 
                 Assert.True(result == expected);
             }
+
+            [TestCase]
+            public async Task Async_Service_Method_Task()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                await service.DoSomethingAsync();
+
+                Assert.Pass();
+            }
         }
     }
 }

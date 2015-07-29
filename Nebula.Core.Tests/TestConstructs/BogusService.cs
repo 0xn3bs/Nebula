@@ -28,6 +28,11 @@ namespace Nebula.Core.Tests.TestConstructs
             return await Task.Run(() => { return input; });
         }
 
+        public async Task DoSomethingAsync()
+        {
+            await Task.Run(() => { int i = 1; int j = i + 1; });
+        }
+
         public GenericType ReturnBogusGenericObject<GenericType>()
         {
             return default(GenericType);
