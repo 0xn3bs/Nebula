@@ -60,6 +60,7 @@
     <Compile Include="IWorkingSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteProcedureCall.cs" />
+    <Compile Include="RemoteServiceResponse.cs" />
     <Compile Include="ServiceCallInterceptor.cs" />
     <Compile Include="ServiceFactory.cs" />
     <Compile Include="ServiceProxyGenerator.cs" />

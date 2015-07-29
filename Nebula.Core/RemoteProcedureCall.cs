@@ -57,7 +57,7 @@ namespace Nebula.Core
             _isGenericMethod = invocation.Method.IsGenericMethod;
         }
 
-        public async Task<object> Execute()
+        public async Task<RemoteServiceResponse> ExecuteRemotely()
         {
             var serialized = Serialize();
 
@@ -77,7 +77,7 @@ namespace Nebula.Core
                 settings.Binder = TypeRegistry.Instance;
                 settings.TypeNameHandling = TypeNameHandling.All;
                 settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-                var deserialized = JsonConvert.DeserializeObject(responseString, settings);
+                var deserialized = (RemoteServiceResponse)JsonConvert.DeserializeObject(responseString, settings);
 
                 return deserialized;
             }
@@ -122,7 +122,7 @@ namespace Nebula.Core
             return candidateMethod;
         }
 
-        public object Result()
+        public object GetResult()
         {
             var type = TypeRegistry.Instance.GetRegisteredTypeByName(_typeFullName);
 

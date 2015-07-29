@@ -42,7 +42,7 @@ namespace Nebula.Core
                 }
 
                 var rpc = new RemoteProcedureCall(_session, invocation);
-                var ex = rpc.Execute();
+                var ex = rpc.ExecuteRemotely();
                 ex.Wait();
 
                 var resultType = invocation.Method.ReturnType;
@@ -54,7 +54,7 @@ namespace Nebula.Core
                     var taskResultType = typeof(Task);
                     var fromResultMethod = taskResultType.GetMethod("FromResult").MakeGenericMethod(underlyingType);
 
-                    object[] par = { ex.Result };
+                    object[] par = { ex.Result.Result };
 
                     var task = fromResultMethod.Invoke(null, par);
 
@@ -67,7 +67,7 @@ namespace Nebula.Core
                 }
                 else
                 {
-                    invocation.ReturnValue = ex.Result;
+                    invocation.ReturnValue = ex.Result.Result;
                 }
             }
         }

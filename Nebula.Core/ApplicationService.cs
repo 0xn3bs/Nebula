@@ -32,33 +32,57 @@ namespace Nebula.Core
 
                 try
                 {
-                    var rpc = RemoteProcedureCall.Deserialize(content);
-                    object result = rpc.Result();
-
-                    var resultType = result.GetType();
-
-                    if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                    try
                     {
-                        var taskResult = resultType.GetProperty("Result").GetValue(result);
-                        result = taskResult;
+                        var rpc = RemoteProcedureCall.Deserialize(content);
+                        object result = rpc.GetResult();
+
+                        var resultType = result.GetType();
+
+                        if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                        {
+                            var taskResult = resultType.GetProperty("Result").GetValue(result);
+                            result = taskResult;
+                        }
+
+                        RemoteServiceResponse response = new RemoteServiceResponse(result, null);
+
+                        byte[] jsonBytes = ObjectToJson(response);
+
+                        WriteBytesToOutputStream(context, jsonBytes);
                     }
+                    catch (Exception e)
+                    {
+                        RemoteServiceResponse response = new RemoteServiceResponse(null, e);
 
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    settings.TypeNameHandling = TypeNameHandling.All;
-                    settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-                    var serializedJson = JsonConvert.SerializeObject(result, settings);
+                        byte[] jsonBytes = ObjectToJson(response);
 
-                    byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(serializedJson);
-
-                    System.IO.Stream output = context.Response.OutputStream;
-                    output.Write(jsonBytes, 0, jsonBytes.Length);
-                    output.Close();
+                        WriteBytesToOutputStream(context, jsonBytes);
+                    }
                 }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
                 }
             }
+        }
+
+        private static void WriteBytesToOutputStream(HttpListenerContext context, byte[] jsonBytes)
+        {
+            System.IO.Stream output = context.Response.OutputStream;
+            output.Write(jsonBytes, 0, jsonBytes.Length);
+            output.Close();
+        }
+
+        private static byte[] ObjectToJson(object result)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.TypeNameHandling = TypeNameHandling.All;
+            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+            var serializedJson = JsonConvert.SerializeObject(result, settings);
+
+            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(serializedJson);
+            return jsonBytes;
         }
     }
 }
