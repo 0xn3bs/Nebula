@@ -6,6 +6,7 @@ This project is an exercise in implementing my own SOA from the experience I've 
 
 ## Features and Roadmap
 - [x] Remote Procedure Calls over HTTP utilizing JSON.
+- [x] Catch Remote Service exceptions.
 - [x] Change tracking.
 - [x] Support for Asynchronous Programming.
 - [ ] Data synchronization between client and services.
