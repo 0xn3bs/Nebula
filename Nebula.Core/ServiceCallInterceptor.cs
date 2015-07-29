@@ -50,7 +50,15 @@ namespace Nebula.Core
                 }
                 catch(Exception e)
                 {
-                    throw e.InnerException;
+                    //  If there's an inner exception start there since Task wraps all thrown exceptions in the InnerException.
+                    if (e.InnerException != null)
+                    {
+                        throw e.InnerException;
+                    }
+                    else
+                    {
+                        throw e;
+                    }
                 }
 
                 var resultType = invocation.Method.ReturnType;
