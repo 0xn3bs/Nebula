@@ -9,7 +9,7 @@ This project is an exercise in implementing my own SOA from the experience I've 
 - [x] Catch Remote Service exceptions.
 - [x] Change tracking.
 - [x] Support for Asynchronous Programming.
-- [ ] Support for Remote Procedure Calls with interfaces as parameters and/or return type.
+- [x] Support for Remote Procedure Calls with interfaces as parameters and/or return type.
 - [ ] Data synchronization between client and services.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/s98el7ttk7isnays/branch/master?svg=true)](https://ci.appveyor.com/project/inkadnb/nebula/branch/master)
