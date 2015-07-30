@@ -64,7 +64,7 @@ namespace Nebula.Core
 
         public async Task<RemoteServiceResponse> ExecuteRemotely()
         {
-            var serialized = Serialize();
+            var serialized = Serialize(this);
 
             var appServicePrefix = ConfigurationManager.AppSettings.GetValues("ApplicationServicePrefix").FirstOrDefault();
 
@@ -95,41 +95,47 @@ namespace Nebula.Core
 
         private MethodInfo GetMethodWithMatchingParameters(List<MethodInfo> methods)
         {
-            MethodInfo candidateMethod = methods.FirstOrDefault();
+            MethodInfo method = methods.FirstOrDefault();
 
-            foreach (var m in methods)
+            foreach (var candidateMethod in methods)
             {
-                var innerCandidateMethod = candidateMethod;
+                method = GetClosestMatchingMethod(candidateMethod, method);
 
-                var pars = m.GetParameters();
+                if (method != null)
+                    break;
+            }
 
-                var argc = _parameters.Count();
+            if (method == null)
+            {
+                throw new Exception($"Unable to find method {method.Name} with matching parameters.");
+            }
 
-                for (int i = 0; i < argc; ++i)
+            return method;
+        }
+
+        private MethodInfo GetClosestMatchingMethod(MethodInfo candidateMethod, MethodInfo method)
+        {
+            var pars = candidateMethod.GetParameters();
+
+            var argc = _parameters.Count();
+
+            for (int i = 0; i < argc; ++i)
+            {
+                var par = _parameters[i].GetType();
+                var methDefPar = pars[i].ParameterType;
+
+                if (methDefPar.IsAssignableFrom(par) || methDefPar.IsGenericParameter)
                 {
-                    var par = _parameters[i].GetType();
-                    var methDefPar = pars[i].ParameterType;
-
-                    if (methDefPar.IsAssignableFrom(par) || methDefPar.IsGenericParameter)
-                    {
-                        innerCandidateMethod = m;
-                    }
-                    else
-                    {
-                        innerCandidateMethod = null;
-                        break;
-                    }
+                    method = candidateMethod;
                 }
-
-                candidateMethod = innerCandidateMethod;
+                else
+                {
+                    method = null;
+                    break;
+                }
             }
 
-            if (candidateMethod == null)
-            {
-                throw new Exception($"Unable to find method {candidateMethod.Name} with matching parameters.");
-            }
-
-            return candidateMethod;
+            return method;
         }
 
         public object GetResult()
@@ -140,36 +146,44 @@ namespace Nebula.Core
 
             if (_isGenericMethod)
             {
-                var methods = type.GetMethods().Where(x => x.Name == _methodName && x.IsGenericMethod &&
-                                                        x.GetParameters().Count() == _parameters.Count() &&
-                                                        x.GetGenericArguments().Count() == _genericArguments.Count()).ToList();
-
-                var candidateMethod = GetMethodWithMatchingParameters(methods);
-
-                var method = candidateMethod.MakeGenericMethod(_genericArguments);
-                var result = method.Invoke(instance, _parameters);
-                return result;
+                return InvokeGenericMethod(type, instance);
             }
             else
             {
-                var methods = type.GetMethods().Where(x => x.Name == _methodName && 
-                                                        !x.IsGenericMethod && 
-                                                        x.ReturnType == _returnType && 
-                                                        x.GetParameters().Count() == _parameters.Count()).ToList();
-
-                var candidateMethod = GetMethodWithMatchingParameters(methods);
-
-                var result = candidateMethod.Invoke(instance, _parameters);
-                return result;
+                return InvokeNonGenericMethod(type, instance);
             }
         }
 
-        public string Serialize()
+        private object InvokeNonGenericMethod(Type type, object instance)
+        {
+            var methods = type.GetMethods().Where(x => x.Name == _methodName &&
+                                                    !x.IsGenericMethod &&
+                                                    x.ReturnType == _returnType &&
+                                                    x.GetParameters().Count() == _parameters.Count()).ToList();
+
+            var candidateMethod = GetMethodWithMatchingParameters(methods);
+
+            return candidateMethod.Invoke(instance, _parameters);
+        }
+
+        private object InvokeGenericMethod(Type type, object instance)
+        {
+            var methods = type.GetMethods().Where(x => x.Name == _methodName && x.IsGenericMethod &&
+                                                    x.GetParameters().Count() == _parameters.Count() &&
+                                                    x.GetGenericArguments().Count() == _genericArguments.Count()).ToList();
+
+            var candidateMethod = GetMethodWithMatchingParameters(methods);
+
+            var method = candidateMethod.MakeGenericMethod(_genericArguments);
+            return method.Invoke(instance, _parameters);
+        }
+
+        public static string Serialize(RemoteProcedureCall rpc)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.TypeNameHandling = TypeNameHandling.All;
             settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-            var serializedJson = JsonConvert.SerializeObject(this, settings);
+            var serializedJson = JsonConvert.SerializeObject(rpc, settings);
             return serializedJson;
         }
 
