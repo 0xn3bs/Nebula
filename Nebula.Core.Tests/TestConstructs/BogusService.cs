@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nebula.Core.Tests.TestConstructs
@@ -25,7 +26,7 @@ namespace Nebula.Core.Tests.TestConstructs
 
         public async Task<string> ReturnBogusStringAsync(string input)
         {
-            return await Task.Run(() => { return input; });
+            return await Task.FromResult(ReturnBogusString(input));
         }
 
         public async Task DoSomethingAsync()
@@ -53,6 +54,11 @@ namespace Nebula.Core.Tests.TestConstructs
             return true;
         }
 
+        public IBogusTrackable ReturnBogusObject(IBogusTrackable input)
+        {
+            return input;
+        }
+
         public async Task<bool> ReturnBogusBoolAsync(BogusTrackable a)
         {
             return await Task.Run(() => ReturnBogusBool(a));
@@ -61,6 +67,17 @@ namespace Nebula.Core.Tests.TestConstructs
         public void ThrowAnException(string exceptionMessage)
         {
             throw new Exception(exceptionMessage);
+        }
+
+        public string SlowServiceCall(string input)
+        {
+            Thread.Sleep(180000);
+            return input;
+        }
+
+        public async Task<string> SlowServiceCallAsync(string input)
+        {
+            return await Task.FromResult(SlowServiceCall(input));
         }
     }
 }

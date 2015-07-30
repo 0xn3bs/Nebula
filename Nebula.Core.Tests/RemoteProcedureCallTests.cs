@@ -177,6 +177,57 @@ namespace Nebula.Core.Tests
 
                 service.ThrowAnException("Some Service Exception");
             }
+
+            [TestCase]
+            public void Service_Method_Utilizing_Interfaces()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                IBogusTrackable expected = new BogusTrackable();
+                expected.Test = "Some string";
+
+                var result = service.ReturnBogusObject(expected);
+
+                Assert.True(result.Test == expected.Test);
+            }
+
+            [TestCase, MaxTime(5000)]
+            [Ignore("For obvious reasons, I don't want this test running every time.")]
+            public void Service_Method_Slow()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                var expected = "12345";
+
+                string result = service.SlowServiceCall(expected);
+
+                Assert.True(result == expected);
+            }
+
+            [TestCase, MaxTime(5000)]
+            [Ignore("For obvious reasons, I don't want this test running every time.")]
+            public async Task Service_Method_Slow_Async()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                var expected = "12345";
+
+                string result = await service.SlowServiceCallAsync(expected);
+
+                Assert.True(result == expected);
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Nebula.Core
                     object result = null;
                     RemoteProcedureCall rpc = null;
                     RemoteServiceResponse response = null;
-                    byte[] jsonBytes = null;
+                    string json = null;
 
                     try
                     {
@@ -54,18 +54,18 @@ namespace Nebula.Core
                     {
                         response = new RemoteServiceResponse(null, e);
 
-                        jsonBytes = ObjectToJson(response);
+                        json = ObjectToJson(response);
 
-                        WriteBytesToOutputStream(context, jsonBytes);
+                        WriteBytesToOutputStream(context, json);
 
                         throw;
                     }
 
                     response = new RemoteServiceResponse(result, null);
 
-                    jsonBytes = ObjectToJson(response);
+                    json = ObjectToJson(response);
 
-                    WriteBytesToOutputStream(context, jsonBytes);
+                    WriteBytesToOutputStream(context, json);
                 }
                 catch (Exception e)
                 {
@@ -80,22 +80,21 @@ namespace Nebula.Core
             }
         }
 
-        private static void WriteBytesToOutputStream(HttpListenerContext context, byte[] jsonBytes)
+        private static void WriteBytesToOutputStream(HttpListenerContext context, string json)
         {
+            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(json);
             System.IO.Stream output = context.Response.OutputStream;
             output.Write(jsonBytes, 0, jsonBytes.Length);
             output.Close();
         }
 
-        private static byte[] ObjectToJson(object result)
+        private static string ObjectToJson(object result)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.TypeNameHandling = TypeNameHandling.All;
             settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
             var serializedJson = JsonConvert.SerializeObject(result, settings);
-
-            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(serializedJson);
-            return jsonBytes;
+            return serializedJson;
         }
     }
 }

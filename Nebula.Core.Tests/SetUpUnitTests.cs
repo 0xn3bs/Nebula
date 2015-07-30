@@ -14,10 +14,10 @@ namespace Nebula.Core.Tests
         [SetUp]
         public void SetUp()
         {
-            var appService = new ApplicationService();
-
             TypeRegistry.Instance.Register(typeof(BogusTrackable));
             TypeRegistry.Instance.Register(typeof(BogusTrackableChild));
+
+            var appService = new ApplicationService();
 
             var host = appService.Host();
         }

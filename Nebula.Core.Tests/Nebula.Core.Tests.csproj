@@ -73,7 +73,7 @@
     <Compile Include="SetUpUnitTests.cs" />
     <Compile Include="TestConstructs\BogusService.cs" />
     <Compile Include="TestConstructs\BogusTrackable.cs" />
-    <Compile Include="TestConstructs\IBogusInterface.cs" />
+    <Compile Include="TestConstructs\IBogusServiceInterface.cs" />
     <Compile Include="WorkingSetTests.cs" />
   </ItemGroup>
   <ItemGroup>

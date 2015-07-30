@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace Nebula.Core.Tests.TestConstructs
 {
+    public interface IBogusTrackable
+    {
+        string Test { get; set; }
+    }
+
     [DataContract]
-    public class BogusTrackable : TrackableObject
+    public class BogusTrackable : TrackableObject, IBogusTrackable
     {
         public string _test;
 
