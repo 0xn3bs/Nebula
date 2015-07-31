@@ -228,6 +228,34 @@ namespace Nebula.Core.Tests
 
                 Assert.True(result == expected);
             }
+
+            [TestCase]
+            public void Service_Method_That_Returns_Nullable_Type_That_Is_Null()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                var result = service.ReturnNullableType(true);
+
+                Assert.True(result == null);
+            }
+
+            [TestCase]
+            public void Service_Method_That_Returns_Nullable_Type_That_Has_Value()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                var result = service.ReturnNullableType(false);
+
+                Assert.True(result != null);
+            }
         }
     }
 }

@@ -26,5 +26,7 @@ namespace Nebula.Core.Tests.TestConstructs
 
         string SlowServiceCall(string input);
         Task<string> SlowServiceCallAsync(string input);
+
+        Guid? ReturnNullableType(bool returnNull);
     }
 }

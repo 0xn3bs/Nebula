@@ -79,5 +79,10 @@ namespace Nebula.Core.Tests.TestConstructs
         {
             return await Task.FromResult(SlowServiceCall(input));
         }
+
+        public Guid? ReturnNullableType(bool returnNull)
+        {
+            return returnNull ? (Guid?)null : Guid.NewGuid();
+        }
     }
 }
