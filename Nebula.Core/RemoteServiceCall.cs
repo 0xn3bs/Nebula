@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Nebula.Core
 {
     [DataContract]
-    public class RemoteProcedureCall
+    public class RemoteServiceCall
     {
         [DataMember]
         private Guid _id;
@@ -36,12 +36,12 @@ namespace Nebula.Core
         [DataMember]
         private bool _isGenericMethod;
 
-        public RemoteProcedureCall()
+        public RemoteServiceCall()
         {
 
         }
 
-        public RemoteProcedureCall(ISession session, IInvocation invocation)
+        public RemoteServiceCall(ISession session, IInvocation invocation)
         {
             if (session == null)
                 throw new ArgumentNullException(nameof(session));
@@ -64,7 +64,7 @@ namespace Nebula.Core
 
         public async Task<RemoteServiceResponse> ExecuteRemotely()
         {
-            var serialized = Serialize(this);
+            var serialized = SerializationHelper.SerializeToJson(this);
 
             var appServicePrefix = ConfigurationManager.AppSettings.GetValues("ApplicationServicePrefix").FirstOrDefault();
 
@@ -78,11 +78,7 @@ namespace Nebula.Core
 
                 var responseString = System.Text.Encoding.UTF8.GetString(responseBytes);
 
-                JsonSerializerSettings settings = new JsonSerializerSettings();
-                settings.Binder = TypeRegistry.Instance;
-                settings.TypeNameHandling = TypeNameHandling.All;
-                settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-                var deserialized = (RemoteServiceResponse)JsonConvert.DeserializeObject(responseString, settings);
+                var deserialized = SerializationHelper.DeserializeFromJson<RemoteServiceResponse>(responseString);
 
                 if(deserialized.Exception != null)
                 {
@@ -176,25 +172,6 @@ namespace Nebula.Core
 
             var method = candidateMethod.MakeGenericMethod(_genericArguments);
             return method.Invoke(instance, _parameters);
-        }
-
-        public static string Serialize(RemoteProcedureCall rpc)
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.TypeNameHandling = TypeNameHandling.All;
-            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-            var serializedJson = JsonConvert.SerializeObject(rpc, settings);
-            return serializedJson;
-        }
-
-        public static RemoteProcedureCall Deserialize(string rpcJson)
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Binder = TypeRegistry.Instance;
-            settings.TypeNameHandling = TypeNameHandling.All;
-            settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-            var deserialized = JsonConvert.DeserializeObject<RemoteProcedureCall>(rpcJson, settings);
-            return deserialized;
         }
     }
 }

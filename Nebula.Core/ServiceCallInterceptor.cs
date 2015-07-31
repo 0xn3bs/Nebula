@@ -41,24 +41,16 @@ namespace Nebula.Core
                     _session = new Session();
                 }
 
-                var rpc = new RemoteProcedureCall(_session, invocation);
+                var rpc = new RemoteServiceCall(_session, invocation);
                 var ex = rpc.ExecuteRemotely();
 
                 try
                 {
                     ex.Wait();
                 }
-                catch(Exception e)
+                catch(Exception e) when (e.InnerException != null)
                 {
-                    //  If there's an inner exception start there since Task wraps all thrown exceptions in the InnerException.
-                    if (e.InnerException != null)
-                    {
-                        throw e.InnerException;
-                    }
-                    else
-                    {
-                        throw e;
-                    }
+                    throw e.InnerException;
                 }
 
                 var resultType = invocation.Method.ReturnType;

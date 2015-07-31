@@ -8,6 +8,7 @@ using SimpleInjector;
 
 namespace Nebula.Core
 {
+    //  Do we really want a singleton?
     public class ServiceFactory
     {
         private static ServiceFactory _instance;
