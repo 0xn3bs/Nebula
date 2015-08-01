@@ -9,7 +9,9 @@ before_build:
 - ps: nuget restore
 build:
   project: Nebula.sln
-  verbosity: normal
+  verbosity: 
+after_test:
+- packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.Runners.2.6.4\tools\nunit-console.exe" -targetargs:"/noshadow /domain:single Nebula.Core.Tests\bin\debug\Nebula.Core.Tests.dll" -output:coverage.xml
 artifacts:
-- path: opencovertests.xml
-  name: opencovertests.xml
+- path: coverage.xml
+  name: coverage.xml
