@@ -44,12 +44,15 @@ namespace Nebula.Core
                         rpc = SerializationHelper.DeserializeFromJson<RemoteServiceCall>(content);
                         result = rpc.GetResult();
 
-                        var resultType = result.GetType();
-
-                        if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                        if (result != null)
                         {
-                            var taskResult = resultType.GetProperty("Result").GetValue(result);
-                            result = taskResult;
+                            var resultType = result.GetType();
+
+                            if (resultType.BaseType == typeof(Task) && resultType.GenericTypeArguments.Count() > 0)
+                            {
+                                var taskResult = resultType.GetProperty("Result").GetValue(result);
+                                result = taskResult;
+                            }
                         }
                     }
                     catch (Exception e)

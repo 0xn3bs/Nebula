@@ -74,6 +74,40 @@ namespace Nebula.Core
                     invocation.ReturnValue = ex;
                 }
                 else
+                if (rpc.ReturnType.IsGenericType && 
+                    rpc.ReturnType.GetGenericTypeDefinition() == typeof(Nullable<>) && 
+                    resultType.GenericTypeArguments.Count() == 1)
+                {
+                    object result = null;
+
+                    var underlyingType = Nullable.GetUnderlyingType(rpc.ReturnType);
+
+                    //  TODO: We need a better way of dealing with Guids.
+                    //  Currently Guids are getting deserialized to strings which 
+                    //  is problematic, this is a temporary fix that does not address all cases. 
+                    //  A general fix will be addressed in 
+                    //  https://github.com/inkadnb/Nebula/issues/3
+                    //  Should also look into other value types that may have similar problems.
+
+                    if (underlyingType == typeof(Guid) && 
+                        ex.Result.Result != null && 
+                        ex.Result.Result.GetType() == typeof(string))
+                    {
+                        Guid guid = new Guid();
+
+                        if(Guid.TryParse((string)ex.Result.Result, out guid))
+                        {
+                            result = guid;
+                        }  
+                        else
+                        {
+                            throw new Exception("Unable to match result with service method return type");
+                        }
+                    }
+                    
+                    invocation.ReturnValue = result;
+                }
+                else
                 {
                     invocation.ReturnValue = ex.Result.Result;
                 }
