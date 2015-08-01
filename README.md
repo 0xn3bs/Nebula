@@ -1,5 +1,8 @@
-# Nebula
-- - -
+Nebula
+======
+
+[![Build status](https://ci.appveyor.com/api/projects/status/s98el7ttk7isnays/branch/master?svg=true)](https://ci.appveyor.com/project/inkadnb/nebula/branch/master) [![Coverage Status](https://coveralls.io/repos/inkadnb/Nebula/badge.svg?branch=master&service=github)](https://coveralls.io/github/inkadnb/Nebula?branch=master)
+
 Nebula is a simple framework for Service Oriented Architecture in .NET.
 
 This project is an exercise in implementing my own SOA from the experience I've gained from writing enterprise software.
@@ -11,7 +14,3 @@ This project is an exercise in implementing my own SOA from the experience I've 
 - [x] [Support for Asynchronous Programming.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteProcedureCallTests.cs#L139-152)
 - [x] [Support for Remote Procedure Calls with interfaces as parameters and/or return type](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteProcedureCallTests.cs#L182-196).
 - [ ] Data synchronization between client and services.
-
-[![Build status](https://ci.appveyor.com/api/projects/status/s98el7ttk7isnays/branch/master?svg=true)](https://ci.appveyor.com/project/inkadnb/nebula/branch/master)
-
-[![Coverage Status](https://coveralls.io/repos/inkadnb/Nebula/badge.svg?branch=master&service=github)](https://coveralls.io/github/inkadnb/Nebula?branch=master)
