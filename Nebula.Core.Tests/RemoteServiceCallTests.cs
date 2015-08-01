@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nebula.Core.Tests
 {
-    public class RemoteProcedureCallTests
+    public class RemoteServiceCallTests
     {
         [TestFixture]
         public class Execute
