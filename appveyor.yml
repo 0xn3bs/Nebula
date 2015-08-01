@@ -8,6 +8,7 @@ install:
 before_build:
 - ps: nuget restore
 build:
+  project: Nebula.sln
   verbosity: normal
 artifacts:
 - path: opencovertests.xml
