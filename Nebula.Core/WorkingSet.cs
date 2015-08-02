@@ -19,9 +19,9 @@ namespace Nebula.Core
             _workingSet = new List<ITrackable>();
         }
 
-        public WorkingSet(List<ITrackable> workingSet)
+        public WorkingSet(IEnumerable<ITrackable> workingSet)
         {
-            _workingSet = workingSet;
+            _workingSet = new List<ITrackable>(workingSet);
         }
 
         public IEnumerator<ITrackable> GetEnumerator()
