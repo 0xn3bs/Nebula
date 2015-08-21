@@ -1,14 +1,11 @@
 ﻿using Castle.DynamicProxy;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nebula.Core
@@ -49,7 +46,12 @@ namespace Nebula.Core
             _id = Guid.NewGuid();
             _session = session;
 
-            _typeFullName = invocation.InvocationTarget.GetType().FullName;
+            //  A bit of an abuse of LINQ really.
+            var remoteServiceAttributeValue = invocation.Method.DeclaringType.CustomAttributes.
+                FirstOrDefault(x => x.AttributeType == typeof(RemoteServiceAttribute)).ConstructorArguments.
+                FirstOrDefault().Value;
+
+            _typeFullName = remoteServiceAttributeValue.ToString();
             _methodName = invocation.Method.Name;
             _parameters = invocation.Arguments;
             _genericArguments = invocation.GenericArguments;
@@ -80,7 +82,7 @@ namespace Nebula.Core
 
                 var deserialized = SerializationHelper.DeserializeFromJson<RemoteServiceResponse>(responseString);
 
-                if(deserialized.Exception != null)
+                if (deserialized.Exception != null)
                 {
                     throw deserialized.Exception.InnerException;
                 }

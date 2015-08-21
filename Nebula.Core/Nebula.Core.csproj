@@ -60,6 +60,7 @@
     <Compile Include="ITrackable.cs" />
     <Compile Include="IWorkingSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoteServiceAttribute.cs" />
     <Compile Include="RemoteServiceCall.cs" />
     <Compile Include="RemoteServiceResponse.cs" />
     <Compile Include="SerializationHelper.cs" />
