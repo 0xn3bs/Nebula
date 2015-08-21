@@ -84,5 +84,10 @@ namespace Nebula.Core.Tests.TestConstructs
         {
             return returnNull ? (Guid?)null : Guid.NewGuid();
         }
+
+        public Guid ReturnGuid()
+        {
+            return Guid.NewGuid();
+        }
     }
 }

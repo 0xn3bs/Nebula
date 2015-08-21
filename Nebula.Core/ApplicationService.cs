@@ -1,18 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nebula.Core
 {
     public class ApplicationService
     {
-        public async Task Host()
+        public virtual async Task Host()
         {
             var appServicePrefix = ConfigurationManager.AppSettings.GetValues("ApplicationServicePrefix").FirstOrDefault();
 
@@ -83,7 +80,7 @@ namespace Nebula.Core
             }
         }
 
-        private static void WriteJsonToOutputStream(System.IO.Stream output, string json)
+        public static void WriteJsonToOutputStream(System.IO.Stream output, string json)
         {
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
@@ -93,7 +90,7 @@ namespace Nebula.Core
             output.Close();
         }
 
-        private static string SerializeObjectToJson(object result)
+        public static string SerializeObjectToJson(object result)
         {
             if (result == null)
                 throw new ArgumentNullException(nameof(result));

@@ -256,6 +256,20 @@ namespace Nebula.Core.Tests
 
                 Assert.True(result != null);
             }
+
+            [TestCase]
+            public void Service_Method_That_Returns_Guid()
+            {
+                ServiceFactory.Instance.Register<IBogusServiceInterface, BogusService>();
+
+                var session = new Session();
+
+                var service = ServiceProxyGenerator.GetService<IBogusServiceInterface>(session);
+
+                var result = service.ReturnGuid();
+
+                Assert.True(result != null);
+            }
         }
     }
 }
