@@ -7,6 +7,13 @@ Nebula is a simple framework for Service Oriented Architecture in .NET.
 
 This project is an exercise in implementing my own SOA from the experience I've gained from writing enterprise software.
 
+Releases
+========
+Releases are available via [NuGet](https://www.nuget.org/packages/Nebula.Core).
+To install Nebula, run the following command in the Package Manager Console
+```
+PM> Install-Package Nebula.Core
+```
 ## Features and Roadmap
 - [x] [Remote Procedure Calls over HTTP utilizing JSON.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteProcedureCallTests.cs#L-19-34)
 - [x] [Catch Remote Service exceptions.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteProcedureCallTests.cs#L-168-179)
