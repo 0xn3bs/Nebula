@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Nebula</title>
+    <authors>Jonathan Bastnagel</authors>
+    <owners>Jonathan Bastnagel</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+    <projectUrl>https://github.com/inkadnb/Nebula</projectUrl>
+    <iconUrl>https://c4c.io/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Remote Procedure Calls over HTTP utilizing JSON. Catch Remote Service exceptions. Change tracking. Support for Asynchronous Programming. Support for Remote Procedure Calls with interfaces as parameters and/or return type.</description>
+    <summary>Nebula is a simple framework for Service Oriented Architecture in .NET.</summary>
+    <releaseNotes>Minor bug fixes</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>service oriented architecture http json remote procedure call</tags>
+  </metadata>
+</package>
