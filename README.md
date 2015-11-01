@@ -15,9 +15,9 @@ To install Nebula, run the following command in the Package Manager Console
 PM> Install-Package Nebula.Core
 ```
 ## Features and Roadmap
-- [x] [Remote Procedure Calls over HTTP utilizing JSON.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs.cs#L-19-34)
-- [x] [Catch Remote Service exceptions.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L-168-179)
+- [x] [Remote Procedure Calls over HTTP utilizing JSON.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L21-L25)
+- [x] [Catch Remote Service exceptions.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L163-L173)
 - [x] Change tracking.
-- [x] [Support for Asynchronous Programming.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L139-152)
-- [x] [Support for Remote Procedure Calls with interfaces as parameters and/or return type](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L182-196).
+- [x] [Support for Asynchronous Programming.](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L133-L146)
+- [x] [Support for Remote Procedure Calls with interfaces as parameters and/or return type](https://github.com/inkadnb/Nebula/blob/master/Nebula.Core.Tests/RemoteServiceCallTests.cs#L176-L190).
 - [ ] Data synchronization between client and services.
